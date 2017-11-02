@@ -1,15 +1,17 @@
-export succ = {}
-succ.clients = {}
-succ.theme = {}
+export succ = {
+  clients: {},
+  theme: {}
+}
 class Window
   new: (title, drawable, config, args) =>
     @title = title
     @drawable = drawable
     @args = args or {}
+    config = config or {}
     @x, @y = config[1] or 0, config[2] or 0
     @w, @h = config[3] or 200, config[4] or 100
     @visible = true
-    table.insert(succ.clients, self)
+    succ.clients[#succ.clients+1] = self
 
   setAlign: (position, to) =>
     @position = position
@@ -20,19 +22,23 @@ class Window
     switch @position[1]
       when "left of"
         @x = @to.x-@w
+        @y = @to.y
       when "right of"
         @x = @to.x+@to.w
+        @y = @to.y
       when "above of"
         @y = @to.y-@h
+        @x = @to.x
       when "below of"
         @y = @to.y+@to.h
+        @x = @to.x
 
     switch @position[1]
       when "left of" or "right of"
         switch @position[2]
           when "@top"
             @y = @to.y
-          when "bot@tom"
+          when "bottom"
             @y = (@to.y+@to.h)-@h
       when "below of" or "above of"
         switch @position[2]
@@ -46,6 +52,15 @@ class Window
     @position = nil
     @to = nil
 
+  destroy: () =>
+    for k, client in ipairs(succ.clients) do
+      if client == self
+        table.remove(succ.clients, k)
+        self = nil
+        return
+
+succ.Window = Window
+
 succ.Draw = () ->
   -- Push all the styles
   for _, style in pairs succ.theme do
@@ -54,15 +69,14 @@ succ.Draw = () ->
   -- Draw all the styles (if visible)
   for _, client in pairs succ.clients do
     if client.visible then
-      imgui.SetNextWindowPos(client.x, client.y)
-      imgui.SetNextWindowSize(client.w, client.h)
+      imgui.SetNextWindowPos(client.x, client.y, "FirstUseEver")
+      imgui.SetNextWindowSize(client.w, client.h, "FirstUseEver")
       status, client.visible = imgui.Begin(client.title, true, unpack(client.args))
       client.drawable()
       imgui.End()
 
   -- Pop out all the styles
-  for i=1, #succ.theme do
-    imgui.PopStyleVar()
+  imgui.PopStyleVar(#succ.theme)
   imgui.Render()
 
 succ.Update = () ->
@@ -96,15 +110,13 @@ succ.keyreleased = (key) ->
 succ.mousemoved = (x, y) ->
   imgui.MouseMoved(x, y)
 
-succ.mousepressed = (x, y, button) ->
+succ.mousepressed = (button) ->
   imgui.MousePressed(button)
 
-succ.mousereleased = (x, y, button) ->
+succ.mousereleased = (button) ->
   imgui.MouseReleased(button)
 
 succ.wheelmoved = (x, y) ->
   imgui.WheelMoved(y)
 
-
-succ.Window = Window
 return succ
