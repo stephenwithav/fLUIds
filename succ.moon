@@ -53,8 +53,12 @@ class Window
     @to = nil
 
   destroy: () =>
-    for k, client in ipairs(succ.clients) do
+    for k, client in pairs(succ.clients) do
       if client == self
+        -- Detach all children from their parent
+        for k, child in pairs succ.clients do
+          if client == child.to
+            child\detach()
         table.remove(succ.clients, k)
         self = nil
         return
@@ -69,9 +73,18 @@ succ.Draw = () ->
   -- Draw all the styles (if visible)
   for _, client in pairs succ.clients do
     if client.visible then
-      imgui.SetNextWindowPos(client.x, client.y, "FirstUseEver")
+      if not succ.clicking
+        imgui.SetNextWindowPos(client.x, client.y)
+      else
+        if client.attached
+          imgui.SetNextWindowPos(client.x, client.y)
       imgui.SetNextWindowSize(client.w, client.h, "FirstUseEver")
-      status, client.visible = imgui.Begin(client.title, true, unpack(client.args))
+      status, client.visible = imgui.Begin(client.title, true, {unpack(client.args)})
+      if succ.clicking
+        client.x, client.y = imgui.GetWindowPos()
+        if client.attached
+          client.x = client.to.x
+          client.y = client.to.y
       client.drawable()
       imgui.End()
 
@@ -82,7 +95,7 @@ succ.Draw = () ->
 succ.Update = () ->
   imgui.NewFrame()
   for _, client in pairs succ.clients do
-    if client.attached
+    if client.attached and client.to ~= nil
       client\calcAlign(client.position, client.to)
 
 succ.ApplyTheme = (theme) ->
@@ -111,9 +124,11 @@ succ.mousemoved = (x, y) ->
   imgui.MouseMoved(x, y)
 
 succ.mousepressed = (button) ->
+  succ.clicking = true
   imgui.MousePressed(button)
 
 succ.mousereleased = (button) ->
+  succ.clicking = false
   imgui.MouseReleased(button)
 
 succ.wheelmoved = (x, y) ->

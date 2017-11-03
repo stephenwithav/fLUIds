@@ -11,6 +11,7 @@ love.load = () ->
   window_func2 = () ->
     imgui.Text("self.x: " .. math.floor(window_2.x))
     imgui.Text("self.y: " .. math.floor(window_2.y))
+    imgui.Text("FPS: " .. love.timer.getFPS())
   window_func3 = () ->
     imgui.Image(image, image\getWidth()/4, image\getHeight()/4)
 
@@ -25,7 +26,10 @@ love.load = () ->
   window_3\setAlign({"above of", "right"}, window_2)
 
 love.update = (dt) ->
+  -- window_1.x-=1
   succ.Update()
+  if love.filesystem.exists("lovebird.lua")
+    require("lovebird").update()
 
 love.draw = () ->
   love.graphics.setBackgroundColor(100,100,100)
@@ -43,6 +47,9 @@ love.keypressed = (key) ->
       window_2\detach()
     when "f"
       window_1\destroy()
+    when "q"
+      succ.Quit()
+      love.event.quit()
 
 love.keyreleased = (key) ->
   succ.keyreleased(key)

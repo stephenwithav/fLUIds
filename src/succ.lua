@@ -49,8 +49,13 @@ do
       self.to = nil
     end,
     destroy = function(self)
-      for k, client in ipairs(succ.clients) do
+      for k, client in pairs(succ.clients) do
         if client == self then
+          for k, child in pairs(succ.clients) do
+            if client == child.to then
+              child:detach()
+            end
+          end
           table.remove(succ.clients, k)
           self = nil
           return 
@@ -90,10 +95,25 @@ succ.Draw = function()
   end
   for _, client in pairs(succ.clients) do
     if client.visible then
-      imgui.SetNextWindowPos(client.x, client.y, "FirstUseEver")
+      if not succ.clicking then
+        imgui.SetNextWindowPos(client.x, client.y)
+      else
+        if client.attached then
+          imgui.SetNextWindowPos(client.x, client.y)
+        end
+      end
       imgui.SetNextWindowSize(client.w, client.h, "FirstUseEver")
       local status
-      status, client.visible = imgui.Begin(client.title, true, unpack(client.args))
+      status, client.visible = imgui.Begin(client.title, true, {
+        unpack(client.args)
+      })
+      if succ.clicking then
+        client.x, client.y = imgui.GetWindowPos()
+        if client.attached then
+          client.x = client.to.x
+          client.y = client.to.y
+        end
+      end
       client.drawable()
       imgui.End()
     end
@@ -104,7 +124,7 @@ end
 succ.Update = function()
   imgui.NewFrame()
   for _, client in pairs(succ.clients) do
-    if client.attached then
+    if client.attached and client.to ~= nil then
       client:calcAlign(client.position, client.to)
     end
   end
@@ -136,9 +156,11 @@ succ.mousemoved = function(x, y)
   return imgui.MouseMoved(x, y)
 end
 succ.mousepressed = function(button)
+  succ.clicking = true
   return imgui.MousePressed(button)
 end
 succ.mousereleased = function(button)
+  succ.clicking = false
   return imgui.MouseReleased(button)
 end
 succ.wheelmoved = function(x, y)

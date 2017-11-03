@@ -11,7 +11,8 @@ love.load = function()
   local window_func2
   window_func2 = function()
     imgui.Text("self.x: " .. math.floor(window_2.x))
-    return imgui.Text("self.y: " .. math.floor(window_2.y))
+    imgui.Text("self.y: " .. math.floor(window_2.y))
+    return imgui.Text("FPS: " .. love.timer.getFPS())
   end
   local window_func3
   window_func3 = function()
@@ -47,7 +48,10 @@ love.load = function()
   }, window_2)
 end
 love.update = function(dt)
-  return succ.Update()
+  succ.Update()
+  if love.filesystem.exists("lovebird.lua") then
+    return require("lovebird").update()
+  end
 end
 love.draw = function()
   love.graphics.setBackgroundColor(100, 100, 100)
@@ -65,6 +69,9 @@ love.keypressed = function(key)
     return window_2:detach()
   elseif "f" == _exp_0 then
     return window_1:destroy()
+  elseif "q" == _exp_0 then
+    succ.Quit()
+    return love.event.quit()
   end
 end
 love.keyreleased = function(key)
