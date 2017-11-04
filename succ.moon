@@ -57,7 +57,7 @@ class Window
       if client == self
         -- Detach all children from their parent
         for k, child in pairs succ.clients do
-          if client == child.to
+          if self == child.to
             child\detach()
         table.remove(succ.clients, k)
         self = nil

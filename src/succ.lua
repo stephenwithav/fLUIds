@@ -52,7 +52,7 @@ do
       for k, client in pairs(succ.clients) do
         if client == self then
           for k, child in pairs(succ.clients) do
-            if client == child.to then
+            if self == child.to then
               child:detach()
             end
           end
