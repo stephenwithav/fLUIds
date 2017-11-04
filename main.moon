@@ -2,7 +2,7 @@ require "imgui"
 require "moonscript"
 io.stdout\setvbuf('no')
 
-succ = require "succ"
+fluids = require "fluids"
 
 love.load = () ->
   image = love.graphics.newImage("image.png")
@@ -16,54 +16,54 @@ love.load = () ->
     imgui.Image(image, image\getWidth()/4, image\getHeight()/4)
 
   theme = {{"WindowRounding", 0}}
-  succ.ApplyTheme(theme)
+  fluids.ApplyTheme(theme)
 
-  export window_1 = succ.Window("Window 1", window_func, {200, 200, 300, 300})
-  export window_2 = succ.Window("Window 2", window_func2 )
-  export window_3 = succ.Window("Window 3", window_func3, {0, 0, 150, 150})
+  export window_1 = fluids.Window("Window 1", window_func, {200, 200, 300, 300})
+  export window_2 = fluids.Window("Window 2", window_func2 )
+  export window_3 = fluids.Window("Window 3", window_func3, {0, 0, 150, 150})
 
   window_2\setAlign({"right of", "bottom"}, window_1)
   window_3\setAlign({"above of", "right"}, window_2)
 
-  succ.Window("No name", window_func, {10, 10, 300, 100})
+  fluids.Window("No name", window_func, {10, 10, 300, 100})
 
 love.update = (dt) ->
   -- window_1.x-=1
-  succ.Update()
+  fluids.Update()
   if love.filesystem.exists("lovebird.lua")
     require("lovebird").update()
 
 love.draw = () ->
   love.graphics.setBackgroundColor(100,100,100)
-  succ.Draw()
+  fluids.Draw()
 
 love.textinput = (t) ->
-  succ.textinput(t)
+  fluids.textinput(t)
 
 love.keypressed = (key) ->
-  succ.keypressed(key)
+  fluids.keypressed(key)
   switch key
     when "w"
-      succ.ToggleVisibliity(window_2)
+      fluids.ToggleVisibliity(window_2)
     when "d"
       window_2\detach()
     when "f"
       window_1\destroy()
     when "q"
-      succ.Quit()
+      fluids.Quit()
       love.event.quit()
 
 love.keyreleased = (key) ->
-  succ.keyreleased(key)
+  fluids.keyreleased(key)
 
 love.mousemoved = (x, y) ->
-  succ.mousemoved(x, y)
+  fluids.mousemoved(x, y)
 
 love.mousepressed = (x, y, button) ->
-  succ.mousepressed(button)
+  fluids.mousepressed(button)
 
 love.mousereleased = (x, y, button) ->
-  succ.mousereleased(button)
+  fluids.mousereleased(button)
 
 love.wheelmoved = (x, y) ->
-  succ.wheelmoved(x, y)
+  fluids.wheelmoved(x, y)

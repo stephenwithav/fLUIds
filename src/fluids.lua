@@ -1,4 +1,4 @@
-succ = {
+fluids = {
   clients = { },
   theme = { }
 }
@@ -49,14 +49,14 @@ do
       self.to = nil
     end,
     destroy = function(self)
-      for k, client in pairs(succ.clients) do
+      for k, client in pairs(fluids.clients) do
         if client == self then
-          for k, child in pairs(succ.clients) do
+          for k, child in pairs(fluids.clients) do
             if self == child.to then
               child:detach()
             end
           end
-          table.remove(succ.clients, k)
+          table.remove(fluids.clients, k)
           self = nil
           return 
         end
@@ -73,7 +73,7 @@ do
       self.x, self.y = config[1] or 0, config[2] or 0
       self.w, self.h = config[3] or 200, config[4] or 100
       self.visible = true
-      succ.clients[#succ.clients + 1] = self
+      fluids.clients[#fluids.clients + 1] = self
     end,
     __base = _base_0,
     __name = "Window"
@@ -88,14 +88,14 @@ do
   _base_0.__class = _class_0
   Window = _class_0
 end
-succ.Window = Window
-succ.Draw = function()
-  for _, style in pairs(succ.theme) do
+fluids.Window = Window
+fluids.Draw = function()
+  for _, style in pairs(fluids.theme) do
     imgui.PushStyleVar(style[1], style[2])
   end
-  for _, client in pairs(succ.clients) do
+  for _, client in pairs(fluids.clients) do
     if client.visible then
-      if not succ.clicking then
+      if not fluids.clicking then
         imgui.SetNextWindowPos(client.x, client.y)
       else
         if client.attached then
@@ -107,7 +107,7 @@ succ.Draw = function()
       status, client.visible = imgui.Begin(client.title, true, {
         unpack(client.args)
       })
-      if succ.clicking then
+      if fluids.clicking then
         client.x, client.y = imgui.GetWindowPos()
         if client.attached then
           client.x = client.to.x
@@ -118,52 +118,52 @@ succ.Draw = function()
       imgui.End()
     end
   end
-  imgui.PopStyleVar(#succ.theme)
+  imgui.PopStyleVar(#fluids.theme)
   return imgui.Render()
 end
-succ.Update = function()
+fluids.Update = function()
   imgui.NewFrame()
-  for _, client in pairs(succ.clients) do
+  for _, client in pairs(fluids.clients) do
     if client.attached and client.to ~= nil then
       client:calcAlign(client.position, client.to)
     end
   end
 end
-succ.ApplyTheme = function(theme)
+fluids.ApplyTheme = function(theme)
   for _, style in pairs(theme) do
-    table.insert(succ.theme, style)
+    table.insert(fluids.theme, style)
   end
 end
-succ.ToggleVisibliity = function(client)
+fluids.ToggleVisibliity = function(client)
   client.visible = not client.visible
 end
-succ.SetFont = function(font, dimensions)
+fluids.SetFont = function(font, dimensions)
   return imgui.SetGlobalFontFromFileTTF(font, unpack(dimensions))
 end
-succ.Quit = function()
+fluids.Quit = function()
   return imgui.ShutDown()
 end
-succ.textinput = function(t)
+fluids.textinput = function(t)
   return imgui.TextInput(t)
 end
-succ.keypressed = function(key)
+fluids.keypressed = function(key)
   return imgui.KeyPressed(key)
 end
-succ.keyreleased = function(key)
+fluids.keyreleased = function(key)
   return imgui.KeyReleased(key)
 end
-succ.mousemoved = function(x, y)
+fluids.mousemoved = function(x, y)
   return imgui.MouseMoved(x, y)
 end
-succ.mousepressed = function(button)
-  succ.clicking = true
+fluids.mousepressed = function(button)
+  fluids.clicking = true
   return imgui.MousePressed(button)
 end
-succ.mousereleased = function(button)
-  succ.clicking = false
+fluids.mousereleased = function(button)
+  fluids.clicking = false
   return imgui.MouseReleased(button)
 end
-succ.wheelmoved = function(x, y)
+fluids.wheelmoved = function(x, y)
   return imgui.WheelMoved(y)
 end
-return succ
+return fluids

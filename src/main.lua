@@ -1,7 +1,7 @@
 require("imgui")
 require("moonscript")
 io.stdout:setvbuf('no')
-local succ = require("succ")
+local fluids = require("fluids")
 love.load = function()
   local image = love.graphics.newImage("image.png")
   local window_func
@@ -24,15 +24,15 @@ love.load = function()
       0
     }
   }
-  succ.ApplyTheme(theme)
-  window_1 = succ.Window("Window 1", window_func, {
+  fluids.ApplyTheme(theme)
+  window_1 = fluids.Window("Window 1", window_func, {
     200,
     200,
     300,
     300
   })
-  window_2 = succ.Window("Window 2", window_func2)
-  window_3 = succ.Window("Window 3", window_func3, {
+  window_2 = fluids.Window("Window 2", window_func2)
+  window_3 = fluids.Window("Window 3", window_func3, {
     0,
     0,
     150,
@@ -46,7 +46,7 @@ love.load = function()
     "above of",
     "right"
   }, window_2)
-  return succ.Window("No name", window_func, {
+  return fluids.Window("No name", window_func, {
     10,
     10,
     300,
@@ -54,44 +54,44 @@ love.load = function()
   })
 end
 love.update = function(dt)
-  succ.Update()
+  fluids.Update()
   if love.filesystem.exists("lovebird.lua") then
     return require("lovebird").update()
   end
 end
 love.draw = function()
   love.graphics.setBackgroundColor(100, 100, 100)
-  return succ.Draw()
+  return fluids.Draw()
 end
 love.textinput = function(t)
-  return succ.textinput(t)
+  return fluids.textinput(t)
 end
 love.keypressed = function(key)
-  succ.keypressed(key)
+  fluids.keypressed(key)
   local _exp_0 = key
   if "w" == _exp_0 then
-    return succ.ToggleVisibliity(window_2)
+    return fluids.ToggleVisibliity(window_2)
   elseif "d" == _exp_0 then
     return window_2:detach()
   elseif "f" == _exp_0 then
     return window_1:destroy()
   elseif "q" == _exp_0 then
-    succ.Quit()
+    fluids.Quit()
     return love.event.quit()
   end
 end
 love.keyreleased = function(key)
-  return succ.keyreleased(key)
+  return fluids.keyreleased(key)
 end
 love.mousemoved = function(x, y)
-  return succ.mousemoved(x, y)
+  return fluids.mousemoved(x, y)
 end
 love.mousepressed = function(x, y, button)
-  return succ.mousepressed(button)
+  return fluids.mousepressed(button)
 end
 love.mousereleased = function(x, y, button)
-  return succ.mousereleased(button)
+  return fluids.mousereleased(button)
 end
 love.wheelmoved = function(x, y)
-  return succ.wheelmoved(x, y)
+  return fluids.wheelmoved(x, y)
 end
