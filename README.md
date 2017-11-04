@@ -1,5 +1,5 @@
 # fLUIds
-Easier love-imgui interface for LÖVE inspired by LaTeX TikZ node positioning. (written in MoonScript!)
+love-imgui API wrap for simplicity, inspired by LaTeX TikZ node positioning. (written in MoonScript!)
 
 ![preview](https://i.imgur.com/aYZ8nu5.png)
 
