@@ -42,10 +42,16 @@ love.load = function()
     "right of",
     "bottom"
   }, window_1)
-  return window_3:setAlign({
+  window_3:setAlign({
     "above of",
     "right"
   }, window_2)
+  return succ.Window("No name", window_func, {
+    10,
+    10,
+    300,
+    100
+  })
 end
 love.update = function(dt)
   succ.Update()

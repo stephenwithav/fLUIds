@@ -25,6 +25,8 @@ love.load = () ->
   window_2\setAlign({"right of", "bottom"}, window_1)
   window_3\setAlign({"above of", "right"}, window_2)
 
+  succ.Window("No name", window_func, {10, 10, 300, 100})
+
 love.update = (dt) ->
   -- window_1.x-=1
   succ.Update()

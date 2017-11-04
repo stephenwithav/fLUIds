@@ -6,6 +6,7 @@ Easier love-imgui interface for LÖVE inspired by LaTeX TikZ node positioning. (
 ## Installation
 * Download the `succ.lua` file inside the `src/` folder of this directory
 * Include `succ` by adding `succ = require("succ")` at the top of your `main.lua`
+* (If you dislike the name `succ`, you can easily change it via: `somename = require("succ")` - or like, you can get over yourself)
 
 ## Example
 ```lua
